@@ -9,7 +9,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align to top for longer content */
+            align-items: flex-start;
             min-height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
@@ -25,7 +25,7 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 100%;
-            max-width: 600px; /* Max width for the game area */
+            max-width: 600px;
         }
 
         h1 {
@@ -35,7 +35,7 @@
 
         .controls {
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             gap: 15px;
@@ -44,8 +44,8 @@
 
         .control-group {
             display: flex;
-            flex-direction: column; /* Stack label and select */
-            align-items: flex-start; /* Align labels to the left */
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .control-group label {
@@ -100,50 +100,88 @@
             border-radius: 6px;
         }
 
+        .puzzle-area {
+            display: flex;
+            justify-content: space-around; /* Adjust as needed */
+            align-items: flex-start;
+            gap: 20px; /* Space between puzzle and reference */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
         #puzzle-board-container {
-            position: relative; /* For the message overlay */
-            width: 90%; /* Responsive width */
-            max-width: 450px; /* Max size of the board */
-            aspect-ratio: 1 / 1; /* Keep it square */
-            margin: 0 auto 20px auto; /* Center the board */
+            position: relative;
+            width: clamp(280px, 70vw, 400px); /* Responsive board size */
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
             border: 2px solid #007bff;
             border-radius: 8px;
-            overflow: hidden; /* Ensure pieces don't overflow rounded corners */
+            overflow: hidden;
+            margin: 0 auto 20px auto; /* Center if it wraps alone */
         }
+        
+        @media (min-width: 550px) { /* Adjust breakpoint as needed */
+            #puzzle-board-container {
+                 margin: 0; /* Remove auto margin when side-by-side */
+            }
+        }
+
 
         #puzzle-board {
             display: grid;
             width: 100%;
             height: 100%;
-            background-color: #ddd; /* Fallback if image doesn't load */
+            background-color: #ddd;
         }
 
         .puzzle-piece {
-            background-size: cover; /* Will be adjusted by JS */
-            border: 1px solid #fff; /* Thin border between pieces */
+            border: 1px solid #fff;
             box-sizing: border-box;
             cursor: pointer;
             transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold; /* For piece numbers if image fails */
+            font-weight: bold;
             color: rgba(0,0,0,0.2);
-            user-select: none; /* Prevent text selection */
+            user-select: none;
+            background-size: cover; /* Set by JS */
+            background-position: center; /* Set by JS */
         }
 
         .puzzle-piece:hover:not(.empty-piece) {
             opacity: 0.85;
-            transform: scale(1.05); /* Slight zoom on hover */
-            z-index: 10; /* Bring hovered piece to front */
+            transform: scale(1.05);
+            z-index: 10;
         }
 
         .empty-piece {
-            background-image: none !important; /* Override image */
-            background-color: #f0f2f5; /* Light background for empty space */
+            background-image: none !important;
+            background-color: #f0f2f5;
             cursor: default;
-            opacity: 1 !important; /* No hover effect */
-            transform: none !important; /* No hover effect */
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        .reference-image-container {
+            width: clamp(100px, 25vw, 150px); /* Responsive reference image size */
+            aspect-ratio: 1 / 1; /* Keep it square if desired */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0 auto 20px auto; /* Center if it wraps alone */
+        }
+        
+        @media (min-width: 550px) { /* Adjust breakpoint as needed */
+            .reference-image-container {
+                 margin: 0; /* Remove auto margin when side-by-side */
+            }
+        }
+
+
+        #referenceImage {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Or 'cover' depending on desired look */
         }
 
         #message-overlay {
@@ -154,12 +192,12 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.75);
             color: white;
-            display: none; /* Hidden by default */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 100;
-            border-radius: inherit; /* Inherit board's border radius */
+            border-radius: inherit;
         }
 
         #win-message {
@@ -189,32 +227,26 @@
             line-height: 1.5;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 15px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
+        @media (max-width: 549px) { /* Stack controls and puzzle elements vertically */
             .controls {
-                flex-direction: column; /* Stack controls vertically */
+                flex-direction: column;
                 gap: 10px;
             }
-            .control-group {
-                width: 100%; /* Make control groups full width */
-            }
-            .controls select, .controls button {
-                width: 100%; /* Make selects and buttons full width */
+            .control-group, .controls button {
+                width: 100%;
                 box-sizing: border-box;
             }
+            .puzzle-area {
+                flex-direction: column;
+                align-items: center; /* Center items when stacked */
+            }
+            #puzzle-board-container, .reference-image-container {
+                margin: 0 auto 20px auto; /* Center when stacked */
+            }
             .game-info {
-                flex-direction: column; /* Stack info items */
+                flex-direction: column;
                 gap: 8px;
                 align-items: center;
-            }
-            #puzzle-board-container {
-                width: 100%; /* Use full available width for board */
             }
         }
     </style>
@@ -225,19 +257,10 @@
 
         <div class="controls">
             <div class="control-group">
-                <label for="imageSelect">Choose Image:</label>
-                <select id="imageSelect">
-                    <option value="Desert.jpg">Nature</option>
-                    <option value="Hydrangeas.jpg">Space</option>
-                    <!-- Add more options here if you have more images -->
-                    <!-- e.g., <option value="my-image.png">My Image</option> -->
-                </select>
-            </div>
-            <div class="control-group">
                 <label for="levelSelect">Level:</label>
                 <select id="levelSelect">
-                    <option value="3">Easy (3x3)</option>
-                    <option value="4" selected>Medium (4x4)</option>
+                    <option value="3" selected>Easy (3x3)</option>
+                    <option value="4">Medium (4x4)</option>
                     <option value="5">Hard (5x5)</option>
                 </select>
             </div>
@@ -250,78 +273,110 @@
             <p>Time: <span id="timer">00:00</span></p>
         </div>
 
-        <div id="puzzle-board-container">
-            <div id="puzzle-board">
-                <!-- Puzzle pieces will be generated here by JavaScript -->
+        <div class="puzzle-area">
+            <div id="puzzle-board-container">
+                <div id="puzzle-board">
+                    <!-- Puzzle pieces will be generated here -->
+                </div>
+                <div id="message-overlay">
+                    <p id="win-message"></p>
+                    <button id="play-again-button">Play Again</button>
+                </div>
             </div>
-            <div id="message-overlay">
-                <p id="win-message"></p>
-                <button id="play-again-button">Play Again</button>
+            <div class="reference-image-container">
+                <img id="referenceImage" src="" alt="Reference Puzzle">
             </div>
         </div>
         
-        <!-- Hidden image element to load and get dimensions -->
-        <img id="sourceImage" src="" alt="Puzzle Source" style="display:none;">
+        <!-- Hidden image element to load and get dimensions for puzzle pieces -->
+        <img id="sourceImageLoader" src="" alt="Puzzle Source Loader" style="display:none;">
 
         <p class="instructions">
-            Click "Start Game". Click a tile adjacent to the empty space to slide it.
-            Arrange tiles to form the original image.
+            Click "Start Game" or a tile to begin. Click a tile adjacent to the empty space to slide it.
+            Arrange tiles to form the original image shown as reference.
         </p>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            // IMPORTANT: Place your default image in an 'images' folder 
+            // next to this HTML file and update the path below if needed.
+            const DEFAULT_IMAGE_SRC = 'images/Jellyfish.jpg'; 
+
+            // --- DOM Elements ---
             const puzzleBoard = document.getElementById('puzzle-board');
             const startButton = document.getElementById('startButton');
             const resetButton = document.getElementById('resetButton');
             const levelSelect = document.getElementById('levelSelect');
-            const imageSelect = document.getElementById('imageSelect');
             const movesDisplay = document.getElementById('moves');
             const timerDisplay = document.getElementById('timer');
-            const sourceImageElement = document.getElementById('sourceImage');
+            const sourceImageLoader = document.getElementById('sourceImageLoader'); // For piece generation
+            const referenceImage = document.getElementById('referenceImage'); // For display
             const messageOverlay = document.getElementById('message-overlay');
             const winMessage = document.getElementById('win-message');
             const playAgainButton = document.getElementById('play-again-button');
 
+            // --- Game State Variables ---
             let gridSize = parseInt(levelSelect.value);
-            let pieces = [];
+            let pieces = []; // 2D array for piece values
             let emptyCoords = { row: 0, col: 0 };
             let moves = 0;
             let timerInterval;
             let seconds = 0;
             let gameStarted = false;
-            let currentImageSrc = '';
-            let startTime = 0; // To correctly resume timer if needed
+            let currentImageSrc = DEFAULT_IMAGE_SRC; // Set the default image
+            let startTime = 0;
 
-            // --- Game Setup ---
-            function initGame() {
+            // --- Core Game Functions ---
+            function initGameLoading() {
                 gridSize = parseInt(levelSelect.value);
-                currentImageSrc = `images/${imageSelect.value}`; // Assumes images are in an 'images' folder
-                sourceImageElement.src = currentImageSrc;
+                currentImageSrc = DEFAULT_IMAGE_SRC; // Always use the default
+                
+                sourceImageLoader.src = currentImageSrc;
+                referenceImage.src = currentImageSrc; // Set reference image immediately
 
-                // Wait for the image to load to get its dimensions for piece slicing
-                sourceImageElement.onload = () => {
-                    resetGameVisuals(); // Reset visuals and counters
-                    createPuzzle();
+                sourceImageLoader.onload = () => {
+                    resetGameVisuals(); // Reset counters and visual elements
+                    createPuzzleMatrix();
                     shufflePieces();
                     renderBoard();
-                    if (gameStarted) {
+                    if (gameStarted) { // Only start timer if game was intentionally started
                         startTimer();
                     }
                 };
-                sourceImageElement.onerror = () => {
+                sourceImageLoader.onerror = () => {
                     alert(`Error loading image: ${currentImageSrc}. 
                     Please ensure:
                     1. You have an 'images' folder in the same directory as this HTML file.
-                    2. The image file '${imageSelect.value}' exists in the 'images' folder.
-                    3. The filename in the <select> dropdown matches exactly (including extension).`);
-                    startButton.disabled = false;
+                    2. The image file '${currentImageSrc.split('/').pop()}' exists in the 'images' folder.
+                    3. If you changed DEFAULT_IMAGE_SRC, ensure it's correct.`);
+                    puzzleBoard.innerHTML = `<p style="color:red; padding:20px;">Failed to load puzzle image.</p>`;
+                    referenceImage.alt = "Image load error";
+                    referenceImage.src = ""; // Clear broken image icon
+                    // Disable game start if image fails
+                    startButton.disabled = true;
                     resetButton.disabled = true;
-                    levelSelect.disabled = false;
-                    imageSelect.disabled = false;
                     gameStarted = false;
-                }
+                };
             }
+            
+            function startGameProcedure() {
+                if (gameStarted) return; // Prevent multiple starts if already processing
+
+                gameStarted = true;
+                startButton.disabled = true;
+                resetButton.disabled = false;
+                levelSelect.disabled = true;
+
+                seconds = 0;
+                moves = 0;
+                updateTimerDisplay();
+                updateMovesDisplay();
+                
+                initGameLoading(); // This will handle image loading and then setup/shuffle/render/start timer
+            }
+
 
             function resetGameVisuals() {
                 moves = 0;
@@ -333,20 +388,18 @@
                 puzzleBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
                 puzzleBoard.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
                 messageOverlay.style.display = 'none';
-                // Button/select states are handled by the calling function (start/reset/play again)
             }
 
             function fullResetAndEnableControls() {
                 resetGameVisuals();
+                gameStarted = false; // Crucial for allowing a new start
                 startButton.disabled = false;
                 resetButton.disabled = true;
                 levelSelect.disabled = false;
-                imageSelect.disabled = false;
-                gameStarted = false;
+                initGameLoading(); // Load default state, but don't auto-start timer
             }
 
-
-            function createPuzzle() {
+            function createPuzzleMatrix() {
                 pieces = [];
                 let count = 1;
                 for (let i = 0; i < gridSize; i++) {
@@ -363,13 +416,12 @@
             }
 
             function shufflePieces() {
-                // Perform a series of valid moves from the solved state to ensure solvability
-                let shuffleMoves = gridSize * gridSize * 10; // Number of shuffles
+                let shuffleMoves = gridSize * gridSize * 10;
                 for (let i = 0; i < shuffleMoves; i++) {
                     const neighbors = getValidNeighbors(emptyCoords.row, emptyCoords.col);
-                    if (neighbors.length > 0) { // Ensure there are neighbors to move to
+                    if (neighbors.length > 0) {
                         const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-                        swapPieces(emptyCoords.row, emptyCoords.col, randomNeighbor.row, randomNeighbor.col);
+                        swapPiecesInMatrix(emptyCoords.row, emptyCoords.col, randomNeighbor.row, randomNeighbor.col);
                         emptyCoords = { row: randomNeighbor.row, col: randomNeighbor.col };
                     }
                 }
@@ -377,26 +429,23 @@
 
             function getValidNeighbors(row, col) {
                 const neighbors = [];
-                if (row > 0) neighbors.push({ row: row - 1, col: col }); // Up
-                if (row < gridSize - 1) neighbors.push({ row: row + 1, col: col }); // Down
-                if (col > 0) neighbors.push({ row: row, col: col - 1 }); // Left
-                if (col < gridSize - 1) neighbors.push({ row: row, col: col + 1 }); // Right
+                if (row > 0) neighbors.push({ row: row - 1, col: col });
+                if (row < gridSize - 1) neighbors.push({ row: row + 1, col: col });
+                if (col > 0) neighbors.push({ row: row, col: col - 1 });
+                if (col < gridSize - 1) neighbors.push({ row: row, col: col + 1 });
                 return neighbors;
             }
 
-            // --- Rendering ---
             function renderBoard() {
-                puzzleBoard.innerHTML = ''; // Clear previous board
-                const imageWidth = sourceImageElement.naturalWidth;
-                const imageHeight = sourceImageElement.naturalHeight;
+                puzzleBoard.innerHTML = '';
+                const imageWidth = sourceImageLoader.naturalWidth;
+                const imageHeight = sourceImageLoader.naturalHeight;
 
                 if (imageWidth === 0 || imageHeight === 0) {
-                    // Image not loaded properly, don't try to render pieces with it
-                    console.error("Image dimensions are zero. Cannot render puzzle pieces with image.");
-                    puzzleBoard.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">Error: Image not loaded. Cannot display puzzle.</p>';
+                    console.error("Image dimensions are zero for piece rendering.");
+                    // Error is handled by sourceImageLoader.onerror for main message
                     return;
                 }
-
 
                 for (let i = 0; i < gridSize; i++) {
                     for (let j = 0; j < gridSize; j++) {
@@ -409,14 +458,11 @@
                         if (pieceValue === 0) {
                             pieceDiv.classList.add('empty-piece');
                         } else {
-                            // Calculate background position based on original image dimensions
                             const originalRow = Math.floor((pieceValue - 1) / gridSize);
                             const originalCol = (pieceValue - 1) % gridSize;
                             
                             pieceDiv.style.backgroundImage = `url(${currentImageSrc})`;
-                            // Background size should be the total size of the puzzle image scaled to fit the grid
                             pieceDiv.style.backgroundSize = `${gridSize * 100}% ${gridSize * 100}%`;
-                            // Background position is negative to "pan" the large image
                             pieceDiv.style.backgroundPosition = `-${originalCol * 100}% -${originalRow * 100}%`;
                             
                             pieceDiv.addEventListener('click', handlePieceClick);
@@ -426,19 +472,21 @@
                 }
             }
 
-            // --- Game Logic ---
             function handlePieceClick(event) {
-                if (!gameStarted) return;
+                if (!gameStarted) {
+                    startGameProcedure(); // Start the game if a tile is clicked first
+                    return; // The click itself doesn't count as a move yet, board will reshuffle
+                }
 
                 const clickedRow = parseInt(event.target.dataset.row);
                 const clickedCol = parseInt(event.target.dataset.col);
 
                 if (isAdjacent(clickedRow, clickedCol, emptyCoords.row, emptyCoords.col)) {
-                    swapPieces(clickedRow, clickedCol, emptyCoords.row, emptyCoords.col);
-                    emptyCoords = { row: clickedRow, col: clickedCol }; // New empty coords
+                    swapPiecesInMatrix(clickedRow, clickedCol, emptyCoords.row, emptyCoords.col);
+                    emptyCoords = { row: clickedRow, col: clickedCol };
                     moves++;
                     updateMovesDisplay();
-                    renderBoard(); // Re-render is simple, could be optimized for large grids
+                    renderBoard(); // Re-render the board with the moved piece
                     
                     if (checkWin()) {
                         handleWin();
@@ -450,7 +498,7 @@
                 return (Math.abs(r1 - r2) === 1 && c1 === c2) || (Math.abs(c1 - c2) === 1 && r1 === r2);
             }
 
-            function swapPieces(r1, c1, r2, c2) {
+            function swapPiecesInMatrix(r1, c1, r2, c2) {
                 const temp = pieces[r1][c1];
                 pieces[r1][c1] = pieces[r2][c2];
                 pieces[r2][c2] = temp;
@@ -472,18 +520,17 @@
 
             function handleWin() {
                 stopTimer();
-                gameStarted = false;
+                gameStarted = false; // Game is over
                 winMessage.textContent = `You Won! Moves: ${moves}, Time: ${timerDisplay.textContent}`;
                 messageOverlay.style.display = 'flex';
                 resetButton.disabled = true; 
                 startButton.disabled = false; 
                 levelSelect.disabled = false;
-                imageSelect.disabled = false;
             }
 
-            // --- Timer & Moves ---
+            // --- Timer & Moves Display ---
             function startTimer() {
-                stopTimer(); // Clear any existing timer
+                stopTimer(); 
                 startTime = Date.now() - (seconds * 1000);
                 timerInterval = setInterval(() => {
                     seconds = Math.floor((Date.now() - startTime) / 1000);
@@ -506,30 +553,19 @@
             }
 
             // --- Event Listeners ---
-            startButton.addEventListener('click', () => {
-                gameStarted = true;
-                startButton.disabled = true;
-                resetButton.disabled = false;
-                levelSelect.disabled = true;
-                imageSelect.disabled = true;
-                seconds = 0; // Reset timer seconds for a new game
-                moves = 0; // Reset moves for a new game
-                updateTimerDisplay();
-                updateMovesDisplay();
-                initGame(); // This will call startTimer after image loads and shuffle
-            });
+            startButton.addEventListener('click', startGameProcedure);
 
             resetButton.addEventListener('click', () => {
-                if (gameStarted) { 
-                  stopTimer();
-                  seconds = 0;
-                  moves = 0;
-                  updateTimerDisplay();
-                  updateMovesDisplay();
-                  initGame(); // Re-initialize with current settings, shuffles and starts timer
-                } else { 
-                  fullResetAndEnableControls();
-                }
+                // Reset always re-shuffles and restarts the timer for the current level
+                stopTimer(); 
+                seconds = 0;
+                moves = 0;
+                updateTimerDisplay();
+                updateMovesDisplay();
+                gameStarted = true; // Ensure timer restarts
+                startButton.disabled = true; // Keep start disabled as game is active
+                levelSelect.disabled = true; // Keep level locked
+                initGameLoading(); // Re-initialize with current settings, shuffles and starts timer
             });
             
             playAgainButton.addEventListener('click', () => {
@@ -537,8 +573,14 @@
                 fullResetAndEnableControls(); 
             });
 
-            // Initial setup: allow selecting level and image before starting
-            fullResetAndEnableControls(); 
+            levelSelect.addEventListener('change', () => {
+                if (!gameStarted) { // Allow level change only if game not started
+                    fullResetAndEnableControls(); // This will also call initGameLoading
+                }
+            });
+
+            // --- Initial Page Load ---
+            fullResetAndEnableControls(); // Set up the board in its initial, non-started state
         });
     </script>
 </body>
