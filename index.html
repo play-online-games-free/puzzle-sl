@@ -38,7 +38,7 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 10px; /* Reduced gap slightly */
             margin-bottom: 20px;
         }
 
@@ -72,8 +72,17 @@
             color: white;
             border-color: #007bff;
         }
+        #solveWithAdButton {
+            background-color: #ffc107; /* Yellow for hint/ad */
+            border-color: #ffc107;
+            color: #212529;
+        }
+        #solveWithAdButton:hover {
+            background-color: #e0a800;
+        }
 
-        .controls button:hover {
+
+        .controls button:hover:not(#solveWithAdButton) {
             background-color: #0056b3;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -102,29 +111,26 @@
 
         .puzzle-area {
             display: flex;
-            justify-content: space-around; /* Adjust as needed */
+            justify-content: space-around;
             align-items: flex-start;
-            gap: 20px; /* Space between puzzle and reference */
-            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         #puzzle-board-container {
             position: relative;
-            width: clamp(280px, 70vw, 400px); /* Responsive board size */
+            width: clamp(280px, 70vw, 400px);
             max-width: 400px;
             aspect-ratio: 1 / 1;
             border: 2px solid #007bff;
             border-radius: 8px;
             overflow: hidden;
-            margin: 0 auto 20px auto; /* Center if it wraps alone */
+            margin: 0 auto 20px auto;
         }
         
-        @media (min-width: 550px) { /* Adjust breakpoint as needed */
-            #puzzle-board-container {
-                 margin: 0; /* Remove auto margin when side-by-side */
-            }
+        @media (min-width: 550px) {
+            #puzzle-board-container { margin: 0; }
         }
-
 
         #puzzle-board {
             display: grid;
@@ -137,15 +143,15 @@
             border: 1px solid #fff;
             box-sizing: border-box;
             cursor: pointer;
-            transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out, background-image 0.1s linear, background-color 0.1s linear;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: bold;
             color: rgba(0,0,0,0.2);
             user-select: none;
-            background-size: cover; /* Set by JS */
-            background-position: center; /* Set by JS */
+            background-size: cover;
+            background-position: center;
         }
 
         .puzzle-piece:hover:not(.empty-piece) {
@@ -156,36 +162,104 @@
 
         .empty-piece {
             background-image: none !important;
-            background-color: #f0f2f5;
+            background-color: #f0f2f5 !important; /* Ensure it stays empty */
             cursor: default;
             opacity: 1 !important;
             transform: none !important;
         }
         
         .reference-image-container {
-            width: clamp(100px, 25vw, 150px); /* Responsive reference image size */
-            aspect-ratio: 1 / 1; /* Keep it square if desired */
+            width: clamp(100px, 25vw, 150px);
+            aspect-ratio: 1 / 1;
             border: 1px solid #ccc;
             border-radius: 6px;
             overflow: hidden;
-            margin: 0 auto 20px auto; /* Center if it wraps alone */
+            margin: 0 auto 20px auto;
         }
         
-        @media (min-width: 550px) { /* Adjust breakpoint as needed */
-            .reference-image-container {
-                 margin: 0; /* Remove auto margin when side-by-side */
-            }
+        @media (min-width: 550px) {
+            .reference-image-container { margin: 0; }
         }
-
 
         #referenceImage {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Or 'cover' depending on desired look */
+            object-fit: contain;
         }
 
+        /* Modal-like Overlays */
+        .overlay {
+            position: fixed; /* Cover viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200; /* Above everything */
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .overlay-content {
+            background-color: #fff;
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 90%;
+            width: 400px;
+        }
+        .overlay h2 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .overlay p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .overlay-buttons button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .overlay-buttons .confirm-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .overlay-buttons .cancel-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        #simulatedAdOverlay p {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #simulatedAdOverlay .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        /* Win Message Overlay (from puzzle board) */
         #message-overlay {
-            position: absolute;
+            position: absolute; /* Relative to puzzle-board-container */
             top: 0;
             left: 0;
             width: 100%;
@@ -196,7 +270,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 100; /* Below general overlays */
             border-radius: inherit;
         }
 
@@ -227,27 +301,12 @@
             line-height: 1.5;
         }
 
-        @media (max-width: 549px) { /* Stack controls and puzzle elements vertically */
-            .controls {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .control-group, .controls button {
-                width: 100%;
-                box-sizing: border-box;
-            }
-            .puzzle-area {
-                flex-direction: column;
-                align-items: center; /* Center items when stacked */
-            }
-            #puzzle-board-container, .reference-image-container {
-                margin: 0 auto 20px auto; /* Center when stacked */
-            }
-            .game-info {
-                flex-direction: column;
-                gap: 8px;
-                align-items: center;
-            }
+        @media (max-width: 549px) {
+            .controls { flex-direction: column; gap: 10px; }
+            .control-group, .controls button { width: 100%; box-sizing: border-box; }
+            .puzzle-area { flex-direction: column; align-items: center; }
+            #puzzle-board-container, .reference-image-container { margin: 0 auto 20px auto; }
+            .game-info { flex-direction: column; gap: 8px; align-items: center; }
         }
     </style>
 </head>
@@ -266,6 +325,7 @@
             </div>
             <button id="startButton">Start Game</button>
             <button id="resetButton" disabled>Reset</button>
+            <button id="solveWithAdButton" disabled>Solve with Ad</button>
         </div>
 
         <div class="game-info">
@@ -275,10 +335,8 @@
 
         <div class="puzzle-area">
             <div id="puzzle-board-container">
-                <div id="puzzle-board">
-                    <!-- Puzzle pieces will be generated here -->
-                </div>
-                <div id="message-overlay">
+                <div id="puzzle-board"></div>
+                <div id="message-overlay"> <!-- Win message specific to puzzle board -->
                     <p id="win-message"></p>
                     <button id="play-again-button">Play Again</button>
                 </div>
@@ -288,98 +346,118 @@
             </div>
         </div>
         
-        <!-- Hidden image element to load and get dimensions for puzzle pieces -->
         <img id="sourceImageLoader" src="" alt="Puzzle Source Loader" style="display:none;">
 
         <p class="instructions">
-            Click "Start Game" or a tile to begin. Click a tile adjacent to the empty space to slide it.
-            Arrange tiles to form the original image shown as reference.
+            Click "Start Game" or a tile to begin. Click "Solve with Ad" for a hint.
         </p>
     </div>
 
+    <!-- Ad Confirmation Overlay -->
+    <div id="adConfirmationOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Solve Puzzle?</h2>
+            <p>Watch a short "ad" to automatically solve the current puzzle.</p>
+            <div class="overlay-buttons">
+                <button id="confirmAdButton" class="confirm-button">Watch Ad</button>
+                <button id="cancelAdButton" class="cancel-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulated Ad Overlay -->
+    <div id="simulatedAdOverlay" class="overlay">
+        <div class="overlay-content" style="background-color: #333; color:white;">
+            <h2>Advertisement</h2>
+            <div class="spinner"></div>
+            <p>Your puzzle will be solved shortly...</p>
+            <p>Ad time remaining: <span id="adTimer">5</span>s</p>
+        </div>
+    </div>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CONFIGURATION ---
-            // IMPORTANT: Place your default image in an 'images' folder 
-            // next to this HTML file and update the path below if needed.
             const DEFAULT_IMAGE_SRC = 'images/Jellyfish.jpg'; 
+            const AD_DURATION_SECONDS = 5;
 
-            // --- DOM Elements ---
             const puzzleBoard = document.getElementById('puzzle-board');
             const startButton = document.getElementById('startButton');
             const resetButton = document.getElementById('resetButton');
+            const solveWithAdButton = document.getElementById('solveWithAdButton');
             const levelSelect = document.getElementById('levelSelect');
             const movesDisplay = document.getElementById('moves');
             const timerDisplay = document.getElementById('timer');
-            const sourceImageLoader = document.getElementById('sourceImageLoader'); // For piece generation
-            const referenceImage = document.getElementById('referenceImage'); // For display
-            const messageOverlay = document.getElementById('message-overlay');
-            const winMessage = document.getElementById('win-message');
+            const sourceImageLoader = document.getElementById('sourceImageLoader');
+            const referenceImage = document.getElementById('referenceImage');
+            
+            const winMessageOverlay = document.getElementById('message-overlay'); // Specific to puzzle board
+            const winMessageText = document.getElementById('win-message');
             const playAgainButton = document.getElementById('play-again-button');
 
-            // --- Game State Variables ---
+            const adConfirmationOverlay = document.getElementById('adConfirmationOverlay');
+            const confirmAdButton = document.getElementById('confirmAdButton');
+            const cancelAdButton = document.getElementById('cancelAdButton');
+            const simulatedAdOverlay = document.getElementById('simulatedAdOverlay');
+            const adTimerDisplay = document.getElementById('adTimer');
+
             let gridSize = parseInt(levelSelect.value);
-            let pieces = []; // 2D array for piece values
+            let pieces = [];
             let emptyCoords = { row: 0, col: 0 };
-            let moves = 0;
+            let movesCount = 0; // Renamed to avoid conflict with 'moves' DOM element
             let timerInterval;
             let seconds = 0;
             let gameStarted = false;
-            let currentImageSrc = DEFAULT_IMAGE_SRC; // Set the default image
+            let currentImageSrc = DEFAULT_IMAGE_SRC;
             let startTime = 0;
+            let interactionDisabled = false; // Flag to disable clicks during ad/solve
 
-            // --- Core Game Functions ---
-            function initGameLoading() {
+            function initGameLoading(isAutoSolve = false) {
                 gridSize = parseInt(levelSelect.value);
-                currentImageSrc = DEFAULT_IMAGE_SRC; // Always use the default
+                currentImageSrc = DEFAULT_IMAGE_SRC;
                 
                 sourceImageLoader.src = currentImageSrc;
-                referenceImage.src = currentImageSrc; // Set reference image immediately
+                referenceImage.src = currentImageSrc;
 
                 sourceImageLoader.onload = () => {
-                    resetGameVisuals(); // Reset counters and visual elements
-                    createPuzzleMatrix();
-                    shufflePieces();
+                    if (!isAutoSolve) resetGameVisuals();
+                    createPuzzleMatrix(isAutoSolve); // Pass flag to create solved if needed
+                    if (!isAutoSolve) shufflePieces();
                     renderBoard();
-                    if (gameStarted) { // Only start timer if game was intentionally started
+                    if (gameStarted && !isAutoSolve) {
                         startTimer();
+                    } else if (isAutoSolve) {
+                        // If auto-solving, we usually stop the timer and show win
+                        // This part will be handled by the autoSolveAndWin function
                     }
                 };
                 sourceImageLoader.onerror = () => {
-                    alert(`Error loading image: ${currentImageSrc}. 
-                    Please ensure:
-                    1. You have an 'images' folder in the same directory as this HTML file.
-                    2. The image file '${currentImageSrc.split('/').pop()}' exists in the 'images' folder.
-                    3. If you changed DEFAULT_IMAGE_SRC, ensure it's correct.`);
+                    alert(`Error loading image: ${currentImageSrc}. Check console for details.`);
+                    console.error(`Error loading image: ${currentImageSrc}. Ensure 'images/default_puzzle.jpg' exists or DEFAULT_IMAGE_SRC is correct.`);
                     puzzleBoard.innerHTML = `<p style="color:red; padding:20px;">Failed to load puzzle image.</p>`;
                     referenceImage.alt = "Image load error";
-                    referenceImage.src = ""; // Clear broken image icon
-                    // Disable game start if image fails
-                    startButton.disabled = true;
-                    resetButton.disabled = true;
-                    gameStarted = false;
+                    referenceImage.src = "";
+                    disableGameControlsOnError();
                 };
             }
             
             function startGameProcedure() {
-                if (gameStarted) return; // Prevent multiple starts if already processing
-
+                if (gameStarted || interactionDisabled) return;
                 gameStarted = true;
+                interactionDisabled = false;
                 startButton.disabled = true;
                 resetButton.disabled = false;
+                solveWithAdButton.disabled = false;
                 levelSelect.disabled = true;
-
                 seconds = 0;
-                moves = 0;
+                movesCount = 0;
                 updateTimerDisplay();
                 updateMovesDisplay();
-                
-                initGameLoading(); // This will handle image loading and then setup/shuffle/render/start timer
+                initGameLoading();
             }
 
-
             function resetGameVisuals() {
-                moves = 0;
+                movesCount = 0;
                 seconds = 0;
                 updateMovesDisplay();
                 updateTimerDisplay();
@@ -387,31 +465,52 @@
                 puzzleBoard.innerHTML = '';
                 puzzleBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
                 puzzleBoard.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-                messageOverlay.style.display = 'none';
+                winMessageOverlay.style.display = 'none';
             }
 
             function fullResetAndEnableControls() {
                 resetGameVisuals();
-                gameStarted = false; // Crucial for allowing a new start
+                gameStarted = false;
+                interactionDisabled = false;
                 startButton.disabled = false;
                 resetButton.disabled = true;
+                solveWithAdButton.disabled = true;
                 levelSelect.disabled = false;
-                initGameLoading(); // Load default state, but don't auto-start timer
+                adConfirmationOverlay.style.display = 'none';
+                simulatedAdOverlay.style.display = 'none';
+                initGameLoading();
+            }
+            
+            function disableGameControlsOnError() {
+                startButton.disabled = true;
+                resetButton.disabled = true;
+                solveWithAdButton.disabled = true;
+                levelSelect.disabled = true;
+                gameStarted = false;
             }
 
-            function createPuzzleMatrix() {
+
+            function createPuzzleMatrix(solved = false) {
                 pieces = [];
                 let count = 1;
                 for (let i = 0; i < gridSize; i++) {
                     pieces[i] = [];
                     for (let j = 0; j < gridSize; j++) {
-                        if (i === gridSize - 1 && j === gridSize - 1) {
-                            pieces[i][j] = 0; // 0 represents the empty space
+                        if (!solved && i === gridSize - 1 && j === gridSize - 1) {
+                            pieces[i][j] = 0; 
                             emptyCoords = { row: i, col: j };
-                        } else {
+                        } else if (solved && i === gridSize - 1 && j === gridSize - 1) {
+                            pieces[i][j] = 0; // Empty piece is 0 even in solved state for consistency
+                            emptyCoords = { row: i, col: j }; // Update empty Coords
+                        }
+                        else {
                             pieces[i][j] = count++;
                         }
                     }
+                }
+                 if (solved) { // Ensure last piece is 0 if we are creating a solved matrix
+                    pieces[gridSize-1][gridSize-1] = 0;
+                    emptyCoords = {row: gridSize-1, col: gridSize-1};
                 }
             }
 
@@ -441,11 +540,7 @@
                 const imageWidth = sourceImageLoader.naturalWidth;
                 const imageHeight = sourceImageLoader.naturalHeight;
 
-                if (imageWidth === 0 || imageHeight === 0) {
-                    console.error("Image dimensions are zero for piece rendering.");
-                    // Error is handled by sourceImageLoader.onerror for main message
-                    return;
-                }
+                if (imageWidth === 0 || imageHeight === 0) return;
 
                 for (let i = 0; i < gridSize; i++) {
                     for (let j = 0; j < gridSize; j++) {
@@ -473,9 +568,11 @@
             }
 
             function handlePieceClick(event) {
+                if (interactionDisabled) return;
+
                 if (!gameStarted) {
-                    startGameProcedure(); // Start the game if a tile is clicked first
-                    return; // The click itself doesn't count as a move yet, board will reshuffle
+                    startGameProcedure();
+                    return; 
                 }
 
                 const clickedRow = parseInt(event.target.dataset.row);
@@ -484,12 +581,12 @@
                 if (isAdjacent(clickedRow, clickedCol, emptyCoords.row, emptyCoords.col)) {
                     swapPiecesInMatrix(clickedRow, clickedCol, emptyCoords.row, emptyCoords.col);
                     emptyCoords = { row: clickedRow, col: clickedCol };
-                    moves++;
+                    movesCount++;
                     updateMovesDisplay();
-                    renderBoard(); // Re-render the board with the moved piece
+                    renderBoard(); 
                     
                     if (checkWin()) {
-                        handleWin();
+                        handleWin("Congratulations!");
                     }
                 }
             }
@@ -508,6 +605,7 @@
                 let count = 1;
                 for (let i = 0; i < gridSize; i++) {
                     for (let j = 0; j < gridSize; j++) {
+                        // The last piece (bottom-right) should be the empty piece (0)
                         if (i === gridSize - 1 && j === gridSize - 1) {
                             if (pieces[i][j] !== 0) return false;
                         } else {
@@ -518,21 +616,26 @@
                 return true;
             }
 
-            function handleWin() {
+            function handleWin(messagePrefix = "You Won!") {
                 stopTimer();
-                gameStarted = false; // Game is over
-                winMessage.textContent = `You Won! Moves: ${moves}, Time: ${timerDisplay.textContent}`;
-                messageOverlay.style.display = 'flex';
+                gameStarted = false; 
+                interactionDisabled = true; // Prevent further interaction until "Play Again"
+                winMessageText.textContent = `${messagePrefix} Moves: ${movesCount}, Time: ${timerDisplay.textContent}`;
+                winMessageOverlay.style.display = 'flex';
                 resetButton.disabled = true; 
+                solveWithAdButton.disabled = true;
                 startButton.disabled = false; 
                 levelSelect.disabled = false;
             }
 
-            // --- Timer & Moves Display ---
             function startTimer() {
                 stopTimer(); 
                 startTime = Date.now() - (seconds * 1000);
                 timerInterval = setInterval(() => {
+                    if (!gameStarted) { // Stop if game ended externally (e.g. auto-solve)
+                        stopTimer();
+                        return;
+                    }
                     seconds = Math.floor((Date.now() - startTime) / 1000);
                     updateTimerDisplay();
                 }, 1000);
@@ -549,38 +652,82 @@
             }
 
             function updateMovesDisplay() {
-                movesDisplay.textContent = moves;
+                movesDisplay.textContent = movesCount;
             }
+
+            // --- Ad Solve Logic ---
+            solveWithAdButton.addEventListener('click', () => {
+                if (!gameStarted || interactionDisabled) return;
+                interactionDisabled = true; // Disable board clicks while prompt is up
+                stopTimer(); // Pause game timer
+                adConfirmationOverlay.style.display = 'flex';
+            });
+
+            confirmAdButton.addEventListener('click', () => {
+                adConfirmationOverlay.style.display = 'none';
+                simulatedAdOverlay.style.display = 'flex';
+                let adTimeLeft = AD_DURATION_SECONDS;
+                adTimerDisplay.textContent = adTimeLeft;
+
+                const adCountdownInterval = setInterval(() => {
+                    adTimeLeft--;
+                    adTimerDisplay.textContent = adTimeLeft;
+                    if (adTimeLeft <= 0) {
+                        clearInterval(adCountdownInterval);
+                        simulatedAdOverlay.style.display = 'none';
+                        autoSolveAndWin();
+                    }
+                }, 1000);
+            });
+
+            cancelAdButton.addEventListener('click', () => {
+                adConfirmationOverlay.style.display = 'none';
+                interactionDisabled = false; // Re-enable board clicks
+                if (gameStarted) startTimer(); // Resume game timer if it was running
+            });
+
+            function autoSolveAndWin() {
+                // Create a solved puzzle matrix
+                createPuzzleMatrix(true); // true for solved state
+                renderBoard(); // Display the solved board
+                // Moves and time for an ad-solve could be set to specific values or kept as is
+                // For simplicity, we'll just call handleWin
+                handleWin("Puzzle Solved via Ad!"); 
+                // interactionDisabled remains true, handled by handleWin
+            }
+
 
             // --- Event Listeners ---
             startButton.addEventListener('click', startGameProcedure);
 
             resetButton.addEventListener('click', () => {
-                // Reset always re-shuffles and restarts the timer for the current level
+                if (interactionDisabled && !gameStarted) return; // Don't reset if in ad flow and game not active
                 stopTimer(); 
                 seconds = 0;
-                moves = 0;
+                movesCount = 0;
                 updateTimerDisplay();
                 updateMovesDisplay();
-                gameStarted = true; // Ensure timer restarts
-                startButton.disabled = true; // Keep start disabled as game is active
-                levelSelect.disabled = true; // Keep level locked
-                initGameLoading(); // Re-initialize with current settings, shuffles and starts timer
+                
+                gameStarted = true; // Mark as started for the reset
+                interactionDisabled = false;
+                startButton.disabled = true; 
+                levelSelect.disabled = true; 
+                solveWithAdButton.disabled = false;
+                initGameLoading(); 
             });
             
             playAgainButton.addEventListener('click', () => {
-                messageOverlay.style.display = 'none';
+                winMessageOverlay.style.display = 'none';
                 fullResetAndEnableControls(); 
             });
 
             levelSelect.addEventListener('change', () => {
-                if (!gameStarted) { // Allow level change only if game not started
-                    fullResetAndEnableControls(); // This will also call initGameLoading
+                if (!gameStarted && !interactionDisabled) { 
+                    fullResetAndEnableControls(); 
                 }
             });
 
-            // --- Initial Page Load ---
-            fullResetAndEnableControls(); // Set up the board in its initial, non-started state
+            fullResetAndEnableControls();
         });
     </script>
 </body>
